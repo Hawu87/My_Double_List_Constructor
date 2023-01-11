@@ -33,12 +33,12 @@ class DoublyLinkedList:
     def pop(self):
         if self.length == 0:
             return None
+        temp = self.tail
         if self.length == 1:
             self.head = None
             self.tail = None
-        else: 
-            temp = self.tail
-            self.tail = self.tail.prev
+        else:
+            self.tail = self.tail.prev 
             self.tail.next = None
             temp.prev = None
         self.length -= 1
@@ -79,24 +79,47 @@ class DoublyLinkedList:
             for _ in range(index):
                 temp = temp.next
         else:
+            temp = self.tail
             for _ in range(self.length - 1, index, -1):
                 temp = temp.prev
         return temp
-        
 
+    def insert(self, index, value):
+        if index < 0 or index > self.length:
+            return False
+        if index == 0:
+            return self.prepend(value)
+        if index == self.length:
+            return self.append(value)
+        new_node = Node(value)
+        temp = self.get(index - 1)
+        pre = temp.next
+        temp.next = new_node
+        new_node.prev = temp
+        new_node.next = pre
+        pre.prev = new_node
+        self.length += 1
+        return True
 
+    def set_value(self, index, value):
+        temp = self.get(index)
+        if temp:
+            temp.value = value
+            return True
+        else:
+            return False
 
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
+    def remove(self, index):
+        if index < 0 or index > self.length:
+            return None
+        if index == 0:
+            return self.pop_first()
+        if index == self.length - 1:
+            return self.pop()
+        temp = self.get(index)
+        temp.next.prev = temp.prev
+        temp.prev.next = temp.next
+        temp.prev = None
+        temp.next = None
+        self.length -= 1
+        return temp
